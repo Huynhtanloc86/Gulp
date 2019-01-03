@@ -22,15 +22,15 @@ gulp.task('hello', function() {
 gulp.task('browserSync', function() {
   browserSync({
     server: {
-      baseDir: 'app'
+      baseDir: 'sources'
     }
   })
 })
 
 gulp.task('sass', function() {
-  return gulp.src('app/scss/**/*.scss') // Gets all files ending with .scss in app/scss and children dirs
+  return gulp.src('sources/scss/**/*.scss') // Gets all files ending with .scss in app/scss and children dirs
     .pipe(sass().on('error', sass.logError)) // Passes it through a gulp-sass, log errors to console
-    .pipe(gulp.dest('app/css')) // Outputs it in the css folder
+    .pipe(gulp.dest('sources/css')) // Outputs it in the css folder
     .pipe(browserSync.reload({ // Reloading with Browser Sync
       stream: true
     }));
@@ -38,43 +38,43 @@ gulp.task('sass', function() {
 
 // Watchers
 gulp.task('watch', function() {
-  gulp.watch('app/scss/**/*.scss', ['sass']);
-  gulp.watch('app/*.html', browserSync.reload);
-  gulp.watch('app/js/**/*.js', browserSync.reload);
+  gulp.watch('sources/scss/**/*.scss', ['sass']);
+  gulp.watch('sources/*.html', browserSync.reload);
+  gulp.watch('sources/js/**/*.js', browserSync.reload);
 })
 
-// Optimization Tasks 
+// Optimization Tasks
 // ------------------
 
-// Optimizing CSS and JavaScript 
+// Optimizing CSS and JavaScript
 gulp.task('useref', function() {
 
-  return gulp.src('app/*.html')
+  return gulp.src('sources/*.html')
     .pipe(useref())
     .pipe(gulpIf('*.js', uglify()))
     .pipe(gulpIf('*.css', cssnano()))
     .pipe(gulp.dest('dist'));
 });
 
-// Optimizing Images 
+// Optimizing Images
 gulp.task('images', function() {
-  return gulp.src('app/images/**/*.+(png|jpg|jpeg|gif|svg)')
-    // Caching images that ran through imagemin
+  return gulp.src('sources/images/**/*.+(png|jpg|jpeg|gif|svg)')
+  // Caching images that ran through imagemin
     .pipe(cache(imagemin({
       interlaced: true,
     })))
     .pipe(gulp.dest('dist/images'))
 });
 
-// Copying fonts 
+// Copying fonts
 gulp.task('fonts', function() {
-  return gulp.src('app/fonts/**/*')
+  return gulp.src('sources/fonts/**/*')
     .pipe(gulp.dest('dist/fonts'))
 })
 
-// Copying file custom-js 
+// Copying file custom-js
 gulp.task('custom-js', function() {
-  return gulp.src('app/js/*.js')
+  return gulp.src('sources/js/*.js')
     .pipe(gulp.dest('dist/js'))
 })
 
